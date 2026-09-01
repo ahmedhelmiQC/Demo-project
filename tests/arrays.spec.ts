@@ -24,10 +24,10 @@ browsers.push("safari");
 browsers.splice(2,2,"edge");
 console.log(browsers);
 
-browsers.pop();
-console.log(browsers);
+// browsers.pop();
+// console.log(browsers);
 
-const browserremoved = browsers.slice(0,2);
+const browserremoved = browsers.slice(1,2);
 console.log(browserremoved);
 
 console.log(browsers);
