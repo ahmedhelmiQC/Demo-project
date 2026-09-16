@@ -13,8 +13,8 @@ test.use({
         await todopage.open();
          await todopage.additems;
 
-        // await expect(page.getByPlaceholder("todo-item")).toHaveCount(1);
-        // await expect(page.getByPlaceholder("todo-item")).toContainText("omar khaled");
+         await expect(page.getByPlaceholder("todo-item")).toHaveCount(1);
+         await expect(page.getByPlaceholder("todo-item")).toContainText("omar khaled");
 
     }
 )
