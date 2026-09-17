@@ -1,5 +1,5 @@
 import{test , expect , type Page } from "@playwright/test"
-import { ToDoPage } from "./ToDoPage.ts";
+import { ToDoPage } from "./ToDoPage";
 
 test.use({
     launchOptions: {slowMo: 800},
