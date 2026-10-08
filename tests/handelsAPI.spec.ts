@@ -5,7 +5,7 @@ const loginPayload = {
     userPassword: "Ahmed@123",
 };
 
-let token;
+let token: string;
 
 test.beforeAll(async()=>{
     const apiContext = await request.newContext();
@@ -21,5 +21,19 @@ test.beforeAll(async()=>{
     const loginResponseJson = await loginResponse.json();
 
     token = loginResponseJson.token;
+})
+
+test("addproduct to the cart", async({page})=>{
+    await page.addInitScript((value) => {
+        window.localStorage.setItem("token",value);
+    }, token);
+    
+    page.goto("https://rahulshettyacademy.com/client/#/dashboard/dash");
+
+    const product = page.locator(".card-body").filter({hasText:"ZARA COAT 3"});
+    await product.getByRole("button", {name:"ADD TO CART"}).click();
+
+    await page.locator("[routerlink*='cart']").click();
+    await expect(page.locator("h3").filter({hasText:"ZARA COAT 3"})).toBeVisible();
 
 })
