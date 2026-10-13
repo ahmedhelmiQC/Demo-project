@@ -1,0 +1,27 @@
+    
+    
+    [
+        {
+    "username":"rahulshettyacademy",
+    "password": "Learning@830$3mK2",
+    "validity": "valid" 
+        }
+    ,
+    {
+    "username":"rahulshettyacademy",
+    "password": "wrong-pass",
+    "validity": "invalid" 
+    },
+    {
+    "username":"wei",
+    "password": "Learning",
+    "validity": "invalid"
+    },
+    
+     {
+    "username":" ",
+    "password": " ",
+    "validity": "invalid"
+     }
+    
+]
