@@ -1,39 +1,39 @@
-import{test , expect , request} from "@playwright/test";
+import{test} from "@playwright/test";
+import fs from "fs";
+import path from "path";
 
-const loginPayload = {
-    userEmail: "original.ahmed99@gmail.com",
-    userPassword: "Ahmed@123",
-};
+import { AuthApi } from "../API/AuthApi";
+import { TokenHelper} from "../Utils/ApiHelper";
+import { DashboardPage } from "../pages/client/ProductPage";
+import { CartPage} from "../pages/client/CartPage";
 
-let token: string;
+type clientEcommerce = {
+        userEmail:string;
+        userPassword: string;
+        productName: string; 
+    }
 
-test.beforeAll(async()=>{
-    const apiContext = await request.newContext();
-    const loginResponse = await apiContext.post
-    ("https://rahulshettyacademy.com/api/ecom/auth/login",
-        {
-            data:loginPayload,
-        }
-    );
+    const datapath = path.join(process.cwd(), "test-data/API.json");
+    const tests:clientEcommerce[] = JSON.parse(fs.readFileSync(datapath,"utf-8"));
 
-    expect(loginResponse.ok()).toBeTruthy();
+    for(const {userEmail,userPassword,productName} of tests){
+        test(`API Login + add"${productName}" for ${userEmail}`,async({page})=>{
+            const authenticationAPI = await AuthApi.create();
+            try{
+                const token = await authenticationAPI.login({userEmail,userPassword});
+                await TokenHelper.inject(page,token);
+            }finally{
+                await authenticationAPI.dispose();
+            }
 
-    const loginResponseJson = await loginResponse.json();
+            const dashboard = new DashboardPage(page);
+            const cart = new CartPage(page);
 
-    token = loginResponseJson.token;
-})
+            await dashboard.open();
+            await dashboard.addProductToCart(productName);
+            await dashboard.openCart();
 
-test("addproduct to the cart", async({page})=>{
-    await page.addInitScript((value) => {
-        window.localStorage.setItem("token",value);
-    }, token);
-    
-    page.goto("https://rahulshettyacademy.com/client/#/dashboard/dash");
+            await cart.expectProductVisibilty(productName);
 
-    const product = page.locator(".card-body").filter({hasText:"ZARA COAT 3"});
-    await product.getByRole("button", {name:"ADD TO CART"}).click();
-
-    await page.locator("[routerlink*='cart']").click();
-    await expect(page.locator("h3").filter({hasText:"ZARA COAT 3"})).toBeVisible();
-
-})
+        })
+    }

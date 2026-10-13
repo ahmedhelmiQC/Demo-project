@@ -16,12 +16,13 @@ export class DashboardPage{
     }
 
     private productCard(productName : string): Locator{
-        return this.page.locator(".cart-body").filter({hasText:productName});
+        return this.page.locator(".card-body").filter({hasText:productName});
     }
-
+    
     async addProductToCart(productName:string):Promise<void>{
         const card = this.productCard(productName);
-        await card.getByRole("button", {name:/add to cart/!}).click();
+        const addButton = card.getByRole("button", {name:/add to cart/i});
+        await addButton.click();
     }
 
     async openCart():Promise<void>{

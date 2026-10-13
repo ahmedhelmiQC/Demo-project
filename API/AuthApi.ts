@@ -7,7 +7,7 @@ export type loginCredentials= {
     userPassword : string;
 }
 
-class AuthApi{
+export class AuthApi{
 
     private constructor(private readonly apiContext:APIRequestContext){}
 
@@ -17,7 +17,7 @@ class AuthApi{
     }
 
     async login({userEmail,userPassword}:loginCredentials):Promise<string>{
-        const loginResponse = await this.apiContext.post("/client/#/auth/login",{
+        const loginResponse = await this.apiContext.post("/api/ecom/auth/login",{
             data: {userEmail,userPassword},
         });
 
